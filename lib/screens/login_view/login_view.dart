@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_management_system/helper/App_fonts.dart';
+import 'package:inventory_management_system/helper/globalbutton.dart';
 import 'package:inventory_management_system/screens/login_view/login_controller.dart';
 
 class LoginView extends GetView<LoginController>{
@@ -20,7 +21,7 @@ class LoginView extends GetView<LoginController>{
          title: Text(
            "Inventory Management",
            style: TextStyle(
-             fontFamily: FontHelper.AppBarFont
+             fontFamily: FontHelper.appBarFont
            ),
          ),
       ),
@@ -31,132 +32,29 @@ class LoginView extends GetView<LoginController>{
           child: Form(
               child: Column(
                 children: [
-        
-        
-                  Center(
-                   child: Container(
-                     width: MediaQuery.of(context).size.width * 0.5,
-                     height: MediaQuery.of(context).size.width * 0.8,
-                     decoration: const BoxDecoration(
-                       image: DecorationImage(
-                         colorFilter: ColorFilter.srgbToLinearGamma(),
-                           image: AssetImage(
-                               "assets/inventory.png"
-                           ),
-                         fit: BoxFit.contain,
-                       )
-                     ),
-        
-                   ),
+
+                  logo(h, w),
+
+                  inputField(h, w),
+
+                  GlobalButton(
+                    label: 'Login',
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Button 1 Clicked!')),
+                      );
+                    },
+                    height: h *0.07,
+                    width: w * 0.9,
                   ),
 
+                  orDivider(h, w),
 
-
-                  TextFormField(
-                    autofocus: false,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      hintText: "Email/Phone No.",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade800,
-                        fontFamily: FontHelper.textFormFont,
-                        fontWeight: FontWeight.bold,
-                        fontSize: h * 0.025,
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: h * 0.02 ,
-                  ),
-
-                  TextFormField(
-                    autofocus: false,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      hintText: "Password",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade800,
-                        fontFamily: FontHelper.textFormFont,
-                        fontWeight: FontWeight.bold,
-                        fontSize: h * 0.025,
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: h * 0.02 ,
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: Colors.grey[400],
-                          thickness: 1,
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(color: Colors.white,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: Colors.grey[400],
-                          thickness: 1,
-                        ),
-                      ),
-                    ],
-                  ),
+                  registerFont(h, w),
 
                   SizedBox(
                     height: h * 0.1 ,
                   ),
-
-                  Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[850],
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: MyTextButton(
-                            bgColor: Colors.white,
-                            buttonName: 'Register',
-                            onTap: () {
-                            },
-                            textColor: Colors.black87,
-                          ),
-                        ),
-                        Expanded(
-                          child: MyTextButton(
-                            bgColor: Colors.transparent,
-                            buttonName: 'Sign In',
-                            onTap: () {
-                            },
-                            textColor: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-
-
                 ],
               )
           ),
@@ -166,48 +64,152 @@ class LoginView extends GetView<LoginController>{
   }
 }
 
-
-
-
-
-
-
-class MyTextButton extends StatelessWidget {
-  const MyTextButton({
-    key,
-    required this.buttonName,
-    required this.onTap,
-    required this.bgColor,
-    required this.textColor,
-  }) : super(key: key);
-  final String buttonName;
-  final Function onTap;
-  final Color bgColor;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(18),
+Widget logo(var h, var w){
+  return Center(
+    child: Container(
+      width:w * 0.9,
+      height: h * 0.3,
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                "assets/system.png"
+            ),
+            fit: BoxFit.contain,
+          )
       ),
-      child: TextButton(
-        style: ButtonStyle(
-          overlayColor: MaterialStateProperty.resolveWith(
-                (states) => Colors.black12,
+
+    ),
+  );
+}
+
+Widget inputField(var h , var w ){
+  return Column(
+    children: [
+      TextFormField(
+        autofocus: false,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          hintText: "Email/Phone No.",
+          hintStyle: TextStyle(
+            color: Colors.grey.shade800,
+            fontFamily: FontHelper.textFormFont,
+            fontWeight: FontWeight.bold,
+            fontSize: h * 0.025,
+          ),
+          fillColor: Colors.white,
+          filled: true,
+        ),
+      ),
+
+      SizedBox(
+        height: h * 0.02 ,
+      ),
+
+      TextFormField(
+        autofocus: false,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          hintText: "Password",
+          hintStyle: TextStyle(
+            color: Colors.grey.shade800,
+            fontFamily: FontHelper.textFormFont,
+            fontWeight: FontWeight.bold,
+            fontSize: h * 0.025,
+          ),
+          fillColor: Colors.white,
+          filled: true,
+        ),
+      ),
+
+      SizedBox(
+        height: h * 0.02 ,
+      ),
+      
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          InkWell(
+            onTap: (){
+              if (kDebugMode) {
+                print("Hello I am working");
+              }
+            },
+            child: Text(
+              "Forget Password",
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: FontHelper.appBarFont,
+                fontSize: 15,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      SizedBox(
+        height: h * 0.02 ,
+      ),
+    ],
+  );
+}
+
+Widget orDivider(var h , var w){
+  return  Row(
+    children: [
+      SizedBox(
+        height: h * 0.1,
+      ),
+      Expanded(
+        child: Divider(
+          color: Colors.grey[400],
+          thickness: 1,
+        ),
+      ),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Text(
+          'OR',
+          style: TextStyle(color: Colors.white,
+              fontWeight: FontWeight.bold
           ),
         ),
-        onPressed: (){
-
-        },
-        child: Text(
-          buttonName,
-          // style: kButtonText.copyWith(color: textColor),
+      ),
+      Expanded(
+        child: Divider(
+          color: Colors.grey[400],
+          thickness: 1,
         ),
       ),
-    );
-  }
+    ],
+  );
+}
+
+Widget registerFont(var h, var w){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        "If you don't have account ?  ",
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFamily: FontHelper.textFormFont
+        ),
+      ),
+
+      Text(
+        "Register",
+        style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            fontFamily: FontHelper.textFormFont
+        ),
+      ),
+    ],
+  );
 }
