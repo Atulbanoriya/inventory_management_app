@@ -14,7 +14,7 @@ class GlobalButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
-    this.color,
+    required  this.color,
     this.textStyle,
     this.padding,
     this.height,
@@ -29,14 +29,14 @@ class GlobalButton extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.greenAccent,
+        color: color,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
           child: Text(
         label,
             style: textStyle ?? TextStyle(
-              fontSize: h * 0.03,
+              fontSize: h * 0.02,
               color: Colors.black,
               fontFamily: FontHelper.buttonFont,
               fontWeight: FontWeight.bold

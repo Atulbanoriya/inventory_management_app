@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_management_system/helper/App_fonts.dart';
 import 'package:inventory_management_system/helper/globalbutton.dart';
 import 'package:inventory_management_system/screens/login_view/login_controller.dart';
+import 'package:inventory_management_system/screens/register_view/register_screen.dart';
 
 class LoginView extends GetView<LoginController>{
   const LoginView({super.key});
@@ -13,63 +14,82 @@ class LoginView extends GetView<LoginController>{
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-       backgroundColor:  Colors.black,
-      appBar:  AppBar(
-        elevation: 0,
-        backgroundColor: Colors.greenAccent,
-         title: Text(
-           "Inventory Management",
-           style: TextStyle(
-             fontFamily: FontHelper.appBarFont
-           ),
-         ),
-      ),
-
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Form(
-              child: Column(
-                children: [
-
-                  logo(h, w),
-
-                  inputField(h, w),
-
-                  GlobalButton(
-                    label: 'Login',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Button 1 Clicked!')),
-                      );
-                    },
-                    height: h *0.07,
-                    width: w * 0.9,
-                  ),
-
-                  orDivider(h, w),
-
-                  registerFont(h, w),
-
-                  SizedBox(
-                    height: h * 0.1 ,
-                  ),
-                ],
-              )
+    return GetBuilder(
+        init:LoginController(),
+        builder: (LoginController loginController){
+        return  Scaffold(
+          backgroundColor:  Colors.black,
+          appBar:  AppBar(
+            elevation: 0,
+            backgroundColor: Colors.greenAccent,
+            title: Text(
+              "Inventory Management",
+              style: TextStyle(
+                  fontFamily: FontHelper.appBarFont
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Form(
+                  child: Column(
+                    children: [
+
+                      logo(h, w),
+
+                      Text(
+                        "Welcome back your account !!!",
+                        style: TextStyle(
+                            fontFamily: FontHelper.buttonFont,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: h * 0.02
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: h * 0.03 ,
+                      ),
+
+                      inputField(h, w),
+
+                      GlobalButton(
+                        label: 'Login',
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Login Button Clicked!')),
+                          );
+                        },
+                        height: h *0.07,
+                        width: w * 1,
+                        color: Colors.greenAccent,
+                      ),
+
+                      orDivider(h, w),
+
+                      registerFont(h, w),
+
+                      SizedBox(
+                        height: h * 0.1 ,
+                      ),
+                    ],
+                  )
+              ),
+            ),
+          ),
+        );
+    });
   }
 }
 
 Widget logo(var h, var w){
   return Center(
     child: Container(
-      width:w * 0.9,
-      height: h * 0.3,
+      height: h * 0.2,
       decoration: const BoxDecoration(
+        color: Colors.black,
           image: DecorationImage(
             image: AssetImage(
                 "assets/system.png"
@@ -143,7 +163,7 @@ Widget inputField(var h , var w ){
               style: TextStyle(
                 color: Colors.white,
                 fontFamily: FontHelper.appBarFont,
-                fontSize: 15,
+                fontSize: h * 0.026,
                 fontWeight: FontWeight.bold
               ),
             ),
@@ -202,12 +222,17 @@ Widget registerFont(var h, var w){
         ),
       ),
 
-      Text(
-        "Register",
-        style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-            fontFamily: FontHelper.textFormFont
+      InkWell(
+        onTap: (){
+          Navigator.push(Get.context!, MaterialPageRoute(builder: (_)=> const RegisterScreen()));
+        },
+        child: Text(
+          "Register",
+          style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontFamily: FontHelper.textFormFont
+          ),
         ),
       ),
     ],
