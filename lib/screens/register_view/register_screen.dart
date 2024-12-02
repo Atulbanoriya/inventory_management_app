@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_management_system/helper/App_fonts.dart';
 import 'package:inventory_management_system/helper/globalbutton.dart';
+import 'package:inventory_management_system/helper/routes.dart';
+import 'package:inventory_management_system/screens/login_view/login_view.dart';
 import 'package:inventory_management_system/screens/register_view/register_controller.dart';
 
 class RegisterScreen extends GetView<RegisterController>{
@@ -27,7 +28,15 @@ class RegisterScreen extends GetView<RegisterController>{
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
+                    SizedBox(
+                      height: h * 0.03 ,
+                    ),
+
                     logo(h,w),
+
+                    SizedBox(
+                      height: h * 0.03 ,
+                    ),
 
                     Text(
                       "Register to manage your item's & helper people to explore",
@@ -35,7 +44,7 @@ class RegisterScreen extends GetView<RegisterController>{
                           fontFamily: FontHelper.buttonFont,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: h * 0.016
+                          fontSize: h * 0.014
                       ),
                     ),
 
@@ -45,14 +54,17 @@ class RegisterScreen extends GetView<RegisterController>{
 
                     inputField(h, w , controller),
 
+
+
                     GlobalButton(
                       label: 'Register',
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login Button Clicked!')),
-                        );
+                        controller.register();
+                            print("Hello Register ${controller.emailController}");
+                            print("Hello  ${controller.passwordController}");
+                            print("Hello  ${controller.confirmPasswordController}");
                       },
-                      height: h *0.07,
+                      height: h * 0.07,
                       width: w * 1,
                       color: Colors.greenAccent,
                     ),
@@ -60,6 +72,13 @@ class RegisterScreen extends GetView<RegisterController>{
                     orDivider(h, w),
 
                     otherRegisterOption(h, w),
+
+                    SizedBox(
+                      height: h* 0.03,
+                    ),
+
+                    registerFont(h, w),
+
 
                   ],
                 ),
@@ -79,7 +98,7 @@ Widget logo(var h, var w){
           color: Colors.black,
           image: DecorationImage(
             image: AssetImage(
-                "assets/system.png"
+                "assets/login.png"
             ),
             fit: BoxFit.contain,
           )
@@ -118,6 +137,7 @@ Widget inputField(var h , var w , RegisterController controller){
       Obx(()=> TextFormField(
         autofocus: false,
         obscureText: !controller.passwordVisible.value,
+        controller: controller.passwordController,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -149,6 +169,7 @@ Widget inputField(var h , var w , RegisterController controller){
       Obx(() => TextFormField(
         obscureText: !controller.isPasswordVisible.value,
         autofocus: false,
+        controller: controller.confirmPasswordController,
         decoration: InputDecoration(
           suffixIcon: IconButton(
             icon: Icon(
@@ -236,6 +257,38 @@ Widget otherRegisterOption(var h , var w){
               width: w * 0.2,
               color: Colors.lightBlue,
           )
+      ),
+    ],
+  );
+}
+
+Widget registerFont(var h, var w){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        "If you have already account ? ",
+        style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: FontHelper.textFormFont,
+            fontSize: h * 0.024
+        ),
+      ),
+
+      InkWell(
+        onTap: (){
+          Navigator.push(Get.context!, MaterialPageRoute(builder: (_)=> const LoginView()));
+        },
+        child: Text(
+          "Login",
+          style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontFamily: FontHelper.textFormFont,
+              fontSize: h * 0.024
+          ),
+        ),
       ),
     ],
   );

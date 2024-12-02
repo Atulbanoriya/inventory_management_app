@@ -36,8 +36,15 @@ class LoginView extends GetView<LoginController>{
               child: Form(
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: h * 0.03 ,
+                      ),
 
                       logo(h, w),
+
+                      SizedBox(
+                        height: h * 0.03 ,
+                      ),
 
                       Text(
                         "Welcome back your account !!!",
@@ -53,19 +60,24 @@ class LoginView extends GetView<LoginController>{
                         height: h * 0.03 ,
                       ),
 
-                      inputField(h, w),
+                      inputField(h, w, controller),
 
                       GlobalButton(
                         label: 'Login',
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Login Button Clicked!')),
+                          controller.loginUser(
+                            controller.emailController.text.trim(),
+                            controller.passwordController.text.trim(),
                           );
+
+                          print("Email: ${controller.emailController.text}");
+                          print("Password: ${controller.passwordController.text}");
                         },
-                        height: h *0.07,
+                        height: h * 0.07,
                         width: w * 1,
                         color: Colors.greenAccent,
                       ),
+
 
                       orDivider(h, w),
 
@@ -92,7 +104,7 @@ Widget logo(var h, var w){
         color: Colors.black,
           image: DecorationImage(
             image: AssetImage(
-                "assets/system.png"
+                "assets/login.png"
             ),
             fit: BoxFit.contain,
           )
@@ -102,11 +114,12 @@ Widget logo(var h, var w){
   );
 }
 
-Widget inputField(var h , var w ){
+Widget inputField(var h , var w , LoginController controller ){
   return Column(
     children: [
       TextFormField(
         autofocus: false,
+        controller: controller.emailController,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -129,6 +142,7 @@ Widget inputField(var h , var w ){
 
       TextFormField(
         autofocus: false,
+        controller: controller.passwordController,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -218,7 +232,9 @@ Widget registerFont(var h, var w){
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontFamily: FontHelper.textFormFont
+          fontFamily: FontHelper.textFormFont,
+          fontSize: h * 0.024
+
         ),
       ),
 
@@ -231,7 +247,8 @@ Widget registerFont(var h, var w){
           style: TextStyle(
               color: Colors.red,
               fontWeight: FontWeight.bold,
-              fontFamily: FontHelper.textFormFont
+              fontFamily: FontHelper.textFormFont,
+              fontSize: h * 0.024
           ),
         ),
       ),
