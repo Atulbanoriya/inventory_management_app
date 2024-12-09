@@ -39,6 +39,9 @@ dependencies:
   google_fonts: ^6.2.1
   cached_network_image: ^3.4.1
   shimmer: ^3.0.0
+  syncfusion_flutter_calendar: ^27.2.5
+  graphic: ^0.5.1
+  syncfusion_flutter_charts: ^27.2.5
 
 dev_dependencies:
   flutter_test:

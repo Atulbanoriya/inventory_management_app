@@ -47,10 +47,12 @@ class RegisterController extends GetxController{
     if (result > 0) {
       Get.snackbar('Success', 'Registration successful!',
           backgroundColor: Colors.green, colorText: Colors.white);
-      Get.toNamed(Routes.login);
-      emailController.clear();
-      passwordController.clear();
-      confirmPasswordController.clear();
+      Future.delayed(const Duration(seconds: 3), () {
+        Get.toNamed(Routes.login);
+        emailController.clear();
+        passwordController.clear();
+        confirmPasswordController.clear();
+      });
     } else {
       Get.snackbar('Error', 'Registration failed.',
           backgroundColor: Colors.redAccent, colorText: Colors.white);

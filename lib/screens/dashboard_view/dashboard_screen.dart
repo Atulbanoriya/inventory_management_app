@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inventory_management_system/helper/App_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dashboard_controller.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DashBoardScreen extends GetView<DashBoardController>{
   const DashBoardScreen({super.key});
@@ -16,26 +17,42 @@ class DashBoardScreen extends GetView<DashBoardController>{
         return Scaffold(
           backgroundColor: Colors.black,
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: h * 0.03,
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: h * 0.03,
+                  ),
 
-                controller.isLoading
-                    ? shimmerAppBar(h, w)
-                    : appBar(h, w),
+                  controller.loading
+                      ? shimmerAppBar(h, w)
+                      : appBar(h, w),
 
-                SizedBox(
-                  height: h * 0.03,
-                ),
+                  SizedBox(
+                    height: h * 0.03,
+                  ),
 
-                controller.isLoading
-                    ? shimmerSearchBar(h, w)
-                    : searchBar(h, w),
+                  controller.loading
+                      ? shimmerSearchBar(h, w)
+                      : searchBar(h, w),
 
-                holeScreen(h, w, controller),
-              ],
+                  SizedBox(
+                    height: h * 0.03,
+                  ),
+
+
+                  boxTotalInventory(h, w, controller),
+
+                  SizedBox(
+                    height: h * 0.01,
+                  ),
+
+                  recentOrderInventory(h, w, controller),
+                ],
+              ),
             ),
           ),
         );
@@ -187,107 +204,216 @@ Widget shimmerSearchBar(var h, var w) {
   );
 }
 
-
-Widget holeScreen(var h, var w, DashBoardController controller) {
-  return controller.isLoading
-      ? ListView.builder(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    itemCount: 6, // Number of shimmer placeholders
-    itemBuilder: (context, index) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-
-            Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                height: h * 0.3,
-                width: w * 0.45,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8),
+Widget boxTotalInventory(double h, double w, DashBoardController controller) {
+  return Row(
+    children: [
+      Expanded(
+        child: Container(
+          width: w * 0.46,
+          height: h * 0.3,
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 5,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+               Text(
+                'Total Inventory Graph',
+                style: TextStyle(
+                    fontSize: h * 0.02,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: FontHelper.textFormFont
                 ),
               ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: Obx(() {
+                  if (controller.totalInventoryData.isEmpty) {
+                    return const Center(
+                      child: Text('No data available'),
+                    );
+                  }
+        
+                  List<InventoryData> dataSource = controller.totalInventoryData;
+        
+                  return SfCartesianChart(
+                    primaryXAxis: const CategoryAxis(
+                      labelRotation: -45,
+                    ),
+                    primaryYAxis: const NumericAxis(
+                      labelFormat: '{value}',
+                      edgeLabelPlacement: EdgeLabelPlacement.shift,
+                    ),
+                    series: <CartesianSeries>[
+                      LineSeries<InventoryData, String>(
+                        dataSource: dataSource,
+                        xValueMapper: (InventoryData data, _) => data.month,
+                        yValueMapper: (InventoryData data, _) => data.value,
+                        color: Colors.blue,
+                        width: 2,
+                        markerSettings: const MarkerSettings(
+                          isVisible: true,
+                          shape: DataMarkerType.circle,
+                          borderWidth: 2,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      ColumnSeries<InventoryData, String>(
+                        dataSource: dataSource,
+                        xValueMapper: (InventoryData data, _) => data.month,
+                        yValueMapper: (InventoryData data, _) => data.value,
+                        color: Colors.blue.withOpacity(0.4),
+                      ),
+                    ],
+                    tooltipBehavior: TooltipBehavior(enable: false),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      SizedBox(
+        width: w * 0.02,
+      ),
+
+      Expanded(child: Container(
+        width: w * 0.46,
+        height: h * 0.3,
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 5,
+              offset: const Offset(0, 5),
             ),
-            Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                height: h * 0.3,
-                width: w * 0.45,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8),
-                ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Inventory Status',
+              style: TextStyle(
+                  fontSize: h * 0.02,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: FontHelper.textFormFont
+              ),
+            ),
+            Expanded(
+              child: SfCircularChart(
+                series: <CircularSeries>[
+                  PieSeries<PieData, String>(
+                    dataSource: controller.pieData,
+                    xValueMapper: (PieData data, _) => data.category,
+                    yValueMapper: (PieData data, _) => data.percentage,
+                    pointColorMapper: (PieData data, _) => data.color,
+                    dataLabelSettings: const DataLabelSettings(isVisible: true),
+                    radius: '90%',
+                    explode: true,
+                    explodeIndex: 3,
+                    startAngle: 0,
+                    endAngle: 360,
+                  ),
+                ],
               ),
             ),
           ],
         ),
-      );
-    },
-  )
-      : ListView.builder(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    itemCount: controller.itemList.length,
-    itemBuilder: (context, index) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: h * 0.3,
-              width: w * 0.45,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  "Left ${controller.itemList[index]}",
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-            Container(
-              height: h * 0.3,
-              width: w * 0.45,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  "Right ${controller.itemList[index]}",
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    },
+      ))
+    ],
   );
 }
+
+Widget recentOrderInventory(var h, var w, DashBoardController controller) {
+  return Container(
+    width: w * 0.46,
+    height: h * 0.3,
+    padding: const EdgeInsets.all(10.0),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          blurRadius: 5,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+         Text(
+          'Recent Orders Inventory',
+          style: TextStyle(
+              fontSize: h * 0.02,
+              fontWeight: FontWeight.bold,
+              fontFamily: FontHelper.textFormFont
+          ),
+        ),
+        Obx(() {
+            return Expanded(
+              child: ListView.builder(
+                itemCount: controller.recentOrders.length,
+                itemBuilder: (context, index) {
+                  OrderData order = controller.recentOrders[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          order.orderName,
+                          style:  TextStyle(
+                            fontSize: h * 0.02,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontHelper.buttonFont
+                          ),
+                        ),
+                         SizedBox(height: h *0.003),
+                        LinearProgressIndicator(
+                          value: order.percentage / 60,
+                          color: _getProgressColor(order.orderName),
+                          backgroundColor: Colors.grey[200],
+                          minHeight: 6,
+                          borderRadius: BorderRadius.circular(10,),
+
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        ),
+      ],
+    ),
+  );
+}
+
+Color _getProgressColor(String orderName) {
+  if (orderName == 'Order 1') return Colors.green;
+  if (orderName == 'Order 2') return Colors.orange;
+  if (orderName == 'Order 3') return Colors.blue;
+  return Colors.red;
+}
+
+
 
 
 

@@ -16,6 +16,15 @@ class LoginController extends GetxController{
       final user = await dbHelper.login(email, password);
 
       if (user != null) {
+
+        Get.snackbar(
+            "Login Success",
+            "You can enjoy your expression",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white
+        );
+
         print("Login Successful: ${user['email']}");
         if (Routes.dashboard != null) {
           Get.toNamed(Routes.dashboard);
@@ -23,6 +32,14 @@ class LoginController extends GetxController{
           print("Error: Route to dashboard is not defined");
         }
       } else {
+
+        Get.snackbar(
+          "Login Failed",
+      "Invalided Credentials",
+               snackPosition: SnackPosition.BOTTOM,
+               backgroundColor: Colors.red,
+               colorText: Colors.white
+        );
         print("Login Failed: Invalid credentials");
       }
     } catch (e) {

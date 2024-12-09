@@ -23,7 +23,7 @@ List<GetPage> allPages = <GetPage>[
 
   GetPage(
     name: Routes.dashboard,
-    page: () => const DashBoardScreen(),
+    page: () =>  DashBoardScreen(),
     binding: DashBoardBinding(),
   ),
 ];
